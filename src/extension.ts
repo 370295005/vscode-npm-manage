@@ -2,12 +2,12 @@ import * as vscode from 'vscode'
 import path from 'path'
 import { getWebViewContent, getExtensionFileVscodeResource } from './utils/index'
 import { MESSAGE } from './enum/message'
-import { getPackageVersion, getPackageLastVersion, getSingleDepInfo } from './core/command'
+import { getPackageVersion, getPackageLastVersion, upgradeDep, getDepLatestVersion } from './core/command'
 import { NodeDependenciesProvider } from './core/com'
 
 type MessageType = {
   command: MESSAGE
-  payload: any
+  payload: { version: string; dep: string }
 }
 /**
  * 插件触发时执行
@@ -37,12 +37,14 @@ export function activate(context: vscode.ExtensionContext) {
      */
     panel.webview.onDidReceiveMessage(async (message: MessageType) => {
       switch (message.command) {
+        // 初始化查询所有依赖的版本
         case MESSAGE.INIT_NPM:
           const data = await getPackageVersion(context, url)
           if (data) {
             panel.webview.postMessage({ message: MESSAGE.FINISH_QUERY_PACKAGE, payload: data })
           }
           return
+        // 获取所有依赖的最新版本
         case MESSAGE.CHECK_PACKAGES_LATEST:
           try {
             const result = await getPackageLastVersion(url)
@@ -53,16 +55,30 @@ export function activate(context: vscode.ExtensionContext) {
             panel.webview.postMessage({ message: MESSAGE.FINISH_CHECK_PACKAGES_LATEST, payload: null })
           }
           return
-        case MESSAGE.SEARCH_PACKAGES_LATEST:
-          console.log(123123)
+        // 搜索依赖
+        case MESSAGE.SEARCH_PACKAGE_LATEST:
           try {
-            console.log(message.payload)
-            const dep = message.payload
-            const result = await getSingleDepInfo(dep)
+            console.log('搜索')
+            const { dep } = message.payload
+            const result = await getDepLatestVersion(dep)
+            panel.webview.postMessage({
+              message: MESSAGE.FINISH_SEARCH_PACKAGE_LATEST,
+              payload: { dep, version: result }
+            })
+            console.log('res', result)
+          } catch (error) {
+            vscode.window.showErrorMessage(JSON.stringify(error))
+            panel.webview.postMessage({ message: MESSAGE.SEARCH_PACKAGE_LATEST, payload: null })
+          }
+          return
+        // 升级单个依赖
+        case MESSAGE.UPGRAD_PACKAGE:
+          try {
+            const { dep, version } = message.payload
+            const result = await upgradeDep(dep, version)
             console.log(result)
           } catch (error) {
             vscode.window.showErrorMessage(JSON.stringify(error))
-            panel.webview.postMessage({ message: MESSAGE.SEARCH_PACKAGES_LATEST, payload: null })
           }
           return
         default:

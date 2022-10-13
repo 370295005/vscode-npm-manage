@@ -19,5 +19,14 @@ export enum MESSAGE {
   /**
    * 搜索检测依赖更新
    */
-  SEARCH_PACKAGES_LATEST
+  SEARCH_PACKAGE_LATEST,
+  FINISH_SEARCH_PACKAGE_LATEST,
+  /**
+   * 升级单个依赖
+   */
+  UPGRAD_PACKAGE,
+  /**
+   * 升级依赖完成
+   */
+  UPGRAD_PACKAGE_FINISH
 }

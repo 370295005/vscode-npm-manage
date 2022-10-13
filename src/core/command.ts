@@ -1,5 +1,5 @@
 import type { PackageType } from '../interface'
-
+import { exec } from 'child_process'
 import * as vscode from 'vscode'
 import { readFilePromise } from '../utils/file'
 import ncu from 'npm-check-updates'
@@ -46,22 +46,42 @@ export const getPackageLastVersion = (packageUrl: string): Promise<StringObject>
 }
 
 /**
- * 查询单个依赖
+ * 升级某个依赖
  * @param {string} dep 依赖的名字
+ * @param {string} version
  */
-export const getSingleDepInfo = (dep: string): Promise<StringObject> => {
+
+export const upgradeDep = (dep: string, version: string): Promise<any> => {
   return new Promise((resolve, reject) => {
-    ncu
-      .run({
-        dep,
-        packageManager: 'npm',
-        jsonUpgraded: true
-      })
-      .then((result) => {
-        resolve(result)
-      })
-      .catch((error) => {
-        reject(error)
-      })
+    const cmd = `npm install ${dep}@${version}`
+    exec(cmd, (error, stdout, stderr) => {
+      if (error || stderr) {
+        reject(error || stderr)
+      } else {
+        resolve(stdout || 'success')
+      }
+    })
+  })
+}
+
+/**
+ * 获取某个依赖的最新版本和所有版本
+ * @param {string} dep 依赖名称
+ * @param {boolean} all 是否检查所有版本
+ * @return 检查最新版本返回字符串，检查所有版本返回一个数组，数组最后一项为最新版本版本号
+ * */
+
+export const getDepLatestVersion = (dep: string, all: boolean = false): Promise<string | Array<string>> => {
+  return new Promise((resolve, reject) => {
+    // 依赖名称不需要用单引号引起来
+    const cmd = `npm view ${dep} version${all ? 's' : ''}`
+    exec(cmd, (error, stdout, stderr) => {
+      if (error || stderr) {
+        reject(error || stderr || '获取版本失败')
+      } else {
+        console.log(stdout)
+        resolve(stdout)
+      }
+    })
   })
 }

@@ -14,6 +14,7 @@ const vscode = acquireVsCodeApi()
 
 const WebView = () => {
   const [searchValue, setSearchValue] = useState('')
+  const [searchResult, setSearchResult] = useState({ dep: '', version: '' })
   const [loading, setLoading] = useState(false)
   const [packageData, setPackageData] = useState<PackageType>({
     name: '',
@@ -48,6 +49,11 @@ const WebView = () => {
             setLoading(false)
           })
           return
+        case MESSAGE.FINISH_SEARCH_PACKAGE_LATEST:
+          const { dep, version } = data.payload
+          console.log('webview 获取到的搜索结果', `${dep}-${version}`)
+          setSearchResult({ dep, version })
+          return
         default:
           return
       }
@@ -71,7 +77,7 @@ const WebView = () => {
   }, [])
   // 搜索依赖
   const onSearch = () => {
-    vscode.postMessage({ command: MESSAGE.SEARCH_PACKAGES_LATEST, payload: searchValue })
+    vscode.postMessage({ command: MESSAGE.SEARCH_PACKAGE_LATEST, payload: { dep: searchValue } })
   }
   const onEnter = () => {
     console.log('按下了enter')
@@ -93,6 +99,20 @@ const WebView = () => {
           </button>
         </div>
       </div>
+      {/* TODO 修改搜索结果的样式 */}
+      {searchResult.dep && searchResult.version ? (
+        <div className="search-result">
+          <div className="title">
+            <span>搜索结果</span>
+          </div>
+          <div className="list">
+            <List
+              data={{ [searchResult.dep]: '' }}
+              latestVersionData={{ [searchResult.dep]: searchResult.version }}
+            ></List>
+          </div>
+        </div>
+      ) : null}
       <div className="content">
         <div className="card">
           <div className="title">
