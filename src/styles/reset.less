@@ -1,0 +1,193 @@
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+  border: 0;
+}
+
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  font-size: 12px;
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote::before,
+blockquote::after,
+q::before,
+q::after {
+  content: '';
+  content: none;
+}
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+input {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 5px 10px;
+  font-size: 12px;
+  // color: var(--vscode-input-foreground);
+  color: var(--vscode-input-foreground);
+  vertical-align: top;
+  background: var(--vscode-input-background);
+  // border: 1px solid var(--vscode-input-background);
+  border: 1px solid var(--vscode-input-border);
+  border-radius: 0;
+  outline: none;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:hover {
+    outline: none !important;
+  }
+}
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 27px;
+  padding: 0;
+
+  padding: 5px 10px;
+  margin: 0;
+  margin-bottom: 0;
+  font-size: 12px;
+  font-weight: 400;
+
+  line-height: 1.5;
+  // color: var(--vscode-input-foreground);
+  color: var(--vscode-button-foreground);
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  // background: var(--vscode-input-background);
+  background: var(--vscode-button-background);
+  border: none;
+  // border: 1px solid var(--vscode-input-background);
+  outline: none; //消除默认点击蓝色边框效果
+
+  &:hover {
+    // color: var(--vscode-button-focusForeground);
+    // background: var(--vscode-input-background);
+    background: var(--vscode-button-hoverBackground);
+    // border: 1px solid var(--vscode-focusBorder);
+  }
+}
+
+/** iconfont */
+.icon {
+  width: 1em;
+  height: 1em;
+  overflow: hidden;
+  font-size: 15px;
+  vertical-align: -0.15em;
+  fill: currentColor;
+}

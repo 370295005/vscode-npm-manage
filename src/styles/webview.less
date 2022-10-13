@@ -1,0 +1,64 @@
+.vscode-light {
+  color: #000;
+}
+.vscode-dark {
+  color: #fff;
+}
+.vscode-high-contrast {
+  color: #3c019b;
+}
+.npm-manage {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  .header {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .filter {
+    margin-left: 10px;
+    .filter-btn {
+      margin: 0 5px;
+    }
+    .download-icon {
+      margin-left: 5px;
+    }
+  }
+
+  .content {
+    height: calc(100vh - 45px);
+    overflow-y: auto;
+    display: flex;
+  }
+
+  .card {
+    flex: 1;
+    margin-top: 10px;
+    &:nth-child(1) {
+      margin-right: 15px;
+      .list {
+        border-right: 1px solid var(--vscode-input-background);
+      }
+    }
+    &:nth-child(2) > .list {
+      border-left: 1px solid var(--vscode-input-background);
+    }
+    .title {
+      display: flex;
+      flex-shrink: 0;
+      justify-content: space-between;
+      min-height: 30px;
+      padding-left: 10px;
+      overflow: hidden;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 30px;
+      color: var(--sideBarSectionHeader-foreground);
+      // text-transform: uppercase;
+      user-select: none;
+      border: 1px solid var(--vscode-input-background);
+    }
+  }
+}

@@ -1,0 +1,229 @@
+{
+  "name": "vscode-npm-manage",
+  "displayName": "Npm Manage",
+  "description": "VSCode Npm管理插件",
+  "keywords": [
+    "npm",
+    "npm manage",
+    "manage"
+  ],
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.46.0"
+  },
+  "categories": [
+    "Other",
+    "Extension Packs"
+  ],
+  "activationEvents": [
+    "onView:npmManageDependencies",
+    "onView:npmManageDevDependencies",
+    "onCommand:vscode-npm-manage.npmUpdateLatest",
+    "onCommand:vscode-npm-manage.openNpmManageView"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "vscode-npm-manage",
+      "properties": {
+        "vscodeNpmManage.yourName": {
+          "type": "string",
+          "default": "guest",
+          "description": "你的名字"
+        },
+        "vscodeNpmManage.showTip": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否在每次启动时显示欢迎提示！"
+        }
+      }
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "vscode-npm-manage.refreshEntry",
+          "when": "view == npmManageDependencies || view == npmManageDevDependencies",
+          "group": "navigation"
+        },
+        {
+          "command": "vscode-npm-manage.addEntry",
+          "when": "view == npmManageDependencies || view == npmManageDevDependencies"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "vscode-npm-manage.deleteEntry",
+          "when": "view == npmManageDependencies || view == npmManageDevDependencies"
+        }
+      ],
+      "editor/title": [
+        {
+          "when": "resourceFilename == package.json",
+          "command": "vscode-npm-manage.openNpmManageView",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "when": "resourceFilename == package.json",
+          "command": "vscode-npm-manage.openNpmManageView",
+          "group": "navigation"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "npmManageSidebar",
+          "title": "Npm Package",
+          "icon": "/src/images/npm-outline.svg"
+        }
+      ]
+    },
+    "views": {
+      "npmManageSidebar": [
+        {
+          "id": "npmManageDependencies",
+          "name": "生产依赖"
+        },
+        {
+          "id": "npmManageDevDependencies",
+          "name": "开发依赖"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "vscode-npm-manage.refreshEntry",
+        "title": "Refresh",
+        "icon": {
+          "light": "/src/images/check-light.svg",
+          "dark": "/src/images/check-dark.svg"
+        }
+      },
+      {
+        "command": "vscode-npm-manage.deleteEntry",
+        "title": "删除"
+      },
+      {
+        "command": "vscode-npm-manage.addEntry",
+        "title": "添加"
+      },
+      {
+        "command": "vscode-npm-manage.openNpmManageView",
+        "title": "Open Npm Manage View",
+        "category": "Npm Manage",
+        "icon": {
+          "light": "/src/images/check-light.svg",
+          "dark": "/src/images/check-dark.svg"
+        }
+      },
+      {
+        "command": "vscode-npm-manage.npmUpdateLatest",
+        "title": "npm update latest",
+        "category": "Npm Manage"
+      }
+    ]
+  },
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development webpack --watch",
+    "build": "cross-env NODE_ENV=production webpack --progress",
+    "vscode:prepublish": "yarn run compile",
+    "compile": "tsc -p ./",
+    "lint": "eslint src --ext ts",
+    "watch": "tsc -watch -p ./",
+    "pretest": "yarn run compile && yarn run lint",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.7",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-decorators": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.8.3",
+    "@babel/preset-env": "^7.8.7",
+    "@babel/preset-react": "^7.8.3",
+    "@babel/runtime": "^7.8.7",
+    "@types/glob": "^7.1.1",
+    "@types/node": "^13.11.0",
+    "@types/vscode": "^1.46.0",
+    "@typescript-eslint/eslint-plugin": "^2.30.0",
+    "@typescript-eslint/parser": "^2.30.0",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.0.6",
+    "chalk": "^4.0.0",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.1.1",
+    "core-js": "^3.6.5",
+    "css-loader": "^3.4.2",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-config-react-app": "^5.1.0",
+    "eslint-loader": "^4.0.2",
+    "eslint-plugin-flowtype": "^4.7.0",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-react": "^7.17.0",
+    "eslint-plugin-react-hooks": "^2.5.1",
+    "friendly-errors-webpack-plugin": "^1.7.0",
+    "glob": "^7.1.6",
+    "html-webpack-plugin": "^4.2.1",
+    "husky": "^4.2.3",
+    "less": "^3.11.1",
+    "less-loader": "^6.0.0",
+    "lint-staged": "^10.2.0",
+    "mini-css-extract-plugin": "^0.9.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "postcss-flexbugs-fixes": "^4.2.1",
+    "postcss-less": "^3.1.4",
+    "postcss-loader": "^3.0.0",
+    "postcss-preset-env": "^6.7.0",
+    "prettier": "^2.0.5",
+    "style-loader": "^1.2.1",
+    "ts-loader": "^7.0.1",
+    "tslib": "^1.11.1",
+    "typescript": "^3.8.3",
+    "url-loader": "^4.1.0",
+    "vscode-test": "^1.3.0",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0",
+    "webpack-extension-reloader": "^1.1.4"
+  },
+  "dependencies": {
+    "@npmcli/promise-spawn": "^1.2.0",
+    "@npms/queries": "^3.0.0",
+    "@types/react": "^16.9.23",
+    "@types/react-dom": "^16.9.7",
+    "@types/webpack-env": "^1.15.1",
+    "axios": "^0.19.2",
+    "cosmiconfig": "^6.0.0",
+    "latest-version": "^5.1.0",
+    "libnpmconfig": "^1.2.1",
+    "npm-check-updates": "^7.0.1",
+    "npm-package-arg": "^8.0.1",
+    "package-json": "^6.5.0",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "read-package-json": "^2.1.1"
+  },
+  "prettier": {
+    "endOfLine": "lf",
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "none",
+    "arrowParens": "always",
+    "printWidth": 120
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,json,html,yml,yaml,pcss,jsx,tsx}": [
+      "prettier --write"
+    ]
+  }
+}

@@ -1,0 +1,149 @@
+
+@blue:rgba(0,183,229,1);
+@blue-lt:lighten(@blue, 30%);
+@blue-shadow:darken(@blue, 30%);
+
+.animation (@name,
+@duration:1s,
+@delay:0,
+@ease:linear,
+@iterations:infinite,
+@endState:normal) {
+  -webkit-animation: @name @duration @ease @iterations @endState;
+  -moz-animation: @name @duration @ease @iterations @endState;
+  -ms-animation: @name @duration @ease @iterations @endState;
+  animation: @name @duration @ease @iterations @endState;
+  .delay(@delay);
+}
+
+.transform-origin (@string) {
+  -webkit-transform-origin: @string;
+  -moz-transform-origin: @string;
+  -ms-transform-origin: @string;
+  transform-origin: @string;
+}
+
+.delay (@delay) {
+  -webkit-animation-delay: @delay;
+  -moz-animation-delay: @delay;
+  -o-animation-delay: @delay;
+  animation-delay: @delay;
+}
+
+.box-shadow (@string) {
+  -webkit-box-shadow: @string;
+  -moz-box-shadow: @string;
+  box-shadow: @string;
+}
+
+.shadow-border (@width:1px) {
+  border: @width solid #111;
+  border-right-color: #333;
+  border-bottom-color: #333;
+}
+
+.square (@xy:30px) {
+  width: @xy;
+  height: @xy;
+}
+
+.gradient (@deg:90deg,
+@color1:#161616,
+@color2:#000) {
+  background-image: -webkit-linear-gradient(@deg, @color1 25%, @color2);
+  background-image: -moz-linear-gradient(@deg, @color1 25%, @color2);
+  filter: progid:dximagetransform.microsoft.gradient(startcolorstr="@color1", endcolorstr="@color2");
+}
+
+.stop {
+  -moz-animation-play-state: paused;
+  -webkit-animation-play-state: paused;
+  animation-play-state: paused;
+}
+.trigger {
+  .gradient(top);
+  .shadow-border;
+  display: block;
+  width: 140px;
+  padding: 10px;
+  margin: 10px auto;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 0.8em;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  text-transform: lowercase;
+  border-radius: 5px;
+  &:hover {
+    .gradient(top, #202020, #161616);
+  }
+}
+
+.vscode-npm-manage-loader-box {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  background-color: rgba(0, 0, 0, 0.7);
+  .vscode-npm-manage-loader-text {
+    font-size: 18px;
+    color: rgb(168, 168, 168);
+    animation: changeshadow 1s  ease-in infinite;
+  }
+}
+
+
+.vscode-npm-manage-loader {
+  .outer {
+    margin: 0 auto;
+    border: 5px solid @blue;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    opacity: 0.9;
+    .square(100px);
+    .box-shadow(0 0 55px @blue-shadow);
+    .animation(spin-right, 0.6s);
+  }
+  .inner {
+    position: relative;
+    top: -50%;
+    display: block;
+    margin: 0 auto;
+    border: 5px solid @blue;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+    border-radius: 50%;
+    opacity: 0.9;
+    .square(60px);
+    .box-shadow(0 0 55px @blue-shadow);
+    .animation(spin-left, 0.6s);
+  }
+}
+
+@keyframes spin-right
+{
+  from { opacity: 0.2; transform: rotate(0deg); }
+  50% { opacity: 1; transform: rotate(180deg); }
+  to { opacity: 0.2; transform: rotate(360deg); }
+}
+
+@keyframes spin-left
+{
+  from { opacity: 0.2; transform: rotate(0deg); }
+  50% { opacity: 1; transform: rotate(-180deg); }
+  to { opacity: 0.2; transform: rotate(-360deg); }
+}
+
+@keyframes changeshadow {
+  0%{ text-shadow: 0 0 4px @blue; }
+  50%{ text-shadow: 0 0 30px @blue; }
+  100%{ text-shadow: 0 0 4px @blue; }
+}
