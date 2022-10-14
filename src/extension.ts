@@ -60,12 +60,13 @@ export function activate(context: vscode.ExtensionContext) {
           try {
             console.log('搜索')
             const { dep } = message.payload
-            const result = await getDepLatestVersion(dep)
-            panel.webview.postMessage({
-              message: MESSAGE.FINISH_SEARCH_PACKAGE_LATEST,
-              payload: { dep, version: result }
-            })
-            console.log('res', result)
+            if (dep) {
+              const result = await getDepLatestVersion(dep)
+              panel.webview.postMessage({
+                message: MESSAGE.FINISH_SEARCH_PACKAGE_LATEST,
+                payload: { dep, version: result }
+              })
+            }
           } catch (error) {
             vscode.window.showErrorMessage(JSON.stringify(error))
             panel.webview.postMessage({ message: MESSAGE.SEARCH_PACKAGE_LATEST, payload: null })

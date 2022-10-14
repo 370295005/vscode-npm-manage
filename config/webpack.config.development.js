@@ -10,7 +10,10 @@ const developmentBaseConfig = {
   mode: 'development',
   resolve: {
     symlinks: false,
-    extensions: ['.js', '.jsx', '.ts', '.tsx']
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    alias: {
+      '@': path.resolve(__dirname, '../src')
+    }
   },
   externals: {
     vscode: 'commonjs vscode' // vscode-module是热更新的临时目录，所以要排除掉。 在这里添加其他不应该被webpack打包的文件, 📖 -> https://webpack.js.org/configuration/externals/
@@ -78,8 +81,8 @@ const webViewConfig = {
   plugins: [
     new FriendlyErrorsPlugin(),
     new CopyWebpackPlugin([
-      { from: 'src/iconfont/iconfont.js', to: './iconfont/iconfont.js' },
-      { from: 'src/images', to: './images' }
+      { from: path.resolve(__dirname, '../src/iconfont'), to: path.resolve(__dirname, '../dist/iconfont') },
+      { from: path.resolve(__dirname, '../src/images'), to: path.resolve(__dirname, '../dist/images') }
     ]),
     new HtmlWebpackPlugin({
       inject: true,

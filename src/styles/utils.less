@@ -1,0 +1,19 @@
+.flex-box(@justify-content:flex-start,@align-items:flex-start,@flex-direction:row) {
+  display: flex;
+  justify-content: @justify-content;
+  align-items: @align-items;
+  flex-direction: @flex-direction;
+}
+.bg {
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center;
+}
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.border (@color) {
+  border: 1px solid @color;
+}

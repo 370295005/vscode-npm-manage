@@ -2,20 +2,21 @@ import type { PackageType } from './interface/index'
 import React, { useState, useCallback, useEffect } from 'react'
 import ReactDom, { unstable_batchedUpdates as batch } from 'react-dom'
 import Input from './components/input/index'
-import List from './components/list'
+import PackageList from './components/package-list'
 import Loading from './components/loading'
-
 import { MESSAGE } from './enum/message'
-
 import './styles/reset.less'
 import './styles/webview.less'
 
 const vscode = acquireVsCodeApi()
-
 const WebView = () => {
+  // 搜索框输入的值
   const [searchValue, setSearchValue] = useState('')
+  // 搜索结果 dep依赖名 version版本号 string | Array<string>
   const [searchResult, setSearchResult] = useState({ dep: '', version: '' })
+  // 是否为加载状态
   const [loading, setLoading] = useState(false)
+  // package.json的内容
   const [packageData, setPackageData] = useState<PackageType>({
     name: '',
     version: '',
@@ -25,8 +26,9 @@ const WebView = () => {
     devDependencies: {},
     dependencies: {}
   })
+  // package.json中所有依赖的最新版本
   const [latestVersionData, setLatestVersion] = useState<{ [key: string]: string }>({})
-
+  // 初始化
   useEffect(() => {
     vscode.postMessage({ command: MESSAGE.INIT_NPM })
   }, [])
@@ -50,6 +52,7 @@ const WebView = () => {
           })
           return
         case MESSAGE.FINISH_SEARCH_PACKAGE_LATEST:
+          setLoading(false)
           const { dep, version } = data.payload
           console.log('webview 获取到的搜索结果', `${dep}-${version}`)
           setSearchResult({ dep, version })
@@ -77,10 +80,11 @@ const WebView = () => {
   }, [])
   // 搜索依赖
   const onSearch = () => {
+    setLoading(true)
     vscode.postMessage({ command: MESSAGE.SEARCH_PACKAGE_LATEST, payload: { dep: searchValue } })
   }
   const onEnter = () => {
-    console.log('按下了enter')
+    onSearch()
   }
   return (
     <div className="npm-manage">
@@ -102,14 +106,16 @@ const WebView = () => {
       {/* TODO 修改搜索结果的样式 */}
       {searchResult.dep && searchResult.version ? (
         <div className="search-result">
-          <div className="title">
-            <span>搜索结果</span>
-          </div>
-          <div className="list">
-            <List
-              data={{ [searchResult.dep]: '' }}
-              latestVersionData={{ [searchResult.dep]: searchResult.version }}
-            ></List>
+          <div className="card">
+            <div className="title">
+              <span>搜索结果</span>
+            </div>
+            <div className="list">
+              <PackageList
+                data={{ [searchResult.dep]: '' }}
+                latestVersionData={{ [searchResult.dep]: searchResult.version }}
+              ></PackageList>
+            </div>
           </div>
         </div>
       ) : null}
@@ -119,7 +125,7 @@ const WebView = () => {
             <span>生产依赖</span>
           </div>
           <div className="list">
-            <List data={packageData.dependencies} latestVersionData={latestVersionData} />
+            <PackageList data={packageData.dependencies} latestVersionData={latestVersionData} />
           </div>
         </div>
         <div className="card">
@@ -127,7 +133,7 @@ const WebView = () => {
             <span>开发依赖</span>
           </div>
           <div className="list">
-            <List data={packageData.devDependencies} latestVersionData={latestVersionData} />
+            <PackageList data={packageData.devDependencies} latestVersionData={latestVersionData} />
           </div>
         </div>
       </div>

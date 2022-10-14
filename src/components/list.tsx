@@ -15,12 +15,14 @@ const List: FC<ListType> = ({ data, latestVersionData }) => {
             <span className="name">{key}</span>
             <div>
               <div className="version">
-                <span>{data[key] || 'version'}</span>
+                <span>{data[key]}</span>
                 {latestVersionData[key] ? (
                   <span>
-                    <svg className="icon ziyuan-icon" aria-hidden="true">
-                      <use xlinkHref="#icon-ziyuan"></use>
-                    </svg>
+                    {data[key] ? (
+                      <svg className="icon ziyuan-icon" aria-hidden="true">
+                        <use xlinkHref="#icon-ziyuan"></use>
+                      </svg>
+                    ) : null}
                     <span className="latest-version">{latestVersionData[key]}</span>
                   </span>
                 ) : null}

@@ -1,0 +1,34 @@
+@import '@/styles/utils.less';
+.package-list {
+  .package {
+    .flex-box(space-between,center);
+    padding: 10px;
+    height: 20px;
+    border: 1px solid var(--vscode-editorGroup-border);
+    border-top: none;
+    &:hover {
+      .package-version {
+        display: none;
+      }
+      .operation {
+        display: flex;
+      }
+    }
+    .package-version {
+      .flex-box(flex-start,center);
+      .upgrade-package-icon {
+        transform: rotate(90deg);
+      }
+    }
+    .operation {
+      .flex-box(flex-start,center);
+      display: none;
+      i[class$='-icon'] {
+        cursor: pointer;
+      }
+      .delete-package-icon {
+        margin-right: 5px;
+      }
+    }
+  }
+}

@@ -79,7 +79,6 @@ export const getDepLatestVersion = (dep: string, all: boolean = false): Promise<
       if (error || stderr) {
         reject(error || stderr || '获取版本失败')
       } else {
-        console.log(stdout)
         resolve(stdout)
       }
     })
