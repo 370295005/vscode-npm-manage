@@ -1,25 +1,15 @@
-import React, { FC, ReactElement, useCallback, KeyboardEventHandler } from 'react'
+import React, { FC, ReactElement } from 'react'
 import './index.less'
 export interface InputProps {
   placeholder?: string
   onChange?: React.ChangeEventHandler<HTMLInputElement>
-  onEnter?: () => void
 }
 
-const Input: FC<InputProps> = ({ onChange, onEnter, placeholder }): ReactElement<any, any> => {
-  const inputHander: KeyboardEventHandler<HTMLInputElement> = useCallback(
-    (target) => {
-      // 敲击回车
-      if (target.keyCode === 13) {
-        onEnter && onEnter()
-      }
-    },
-    [onEnter]
-  )
+const Input: FC<InputProps> = ({ onChange, placeholder }): ReactElement<any, any> => {
   return (
     <>
       <div className="search-input">
-        <input type="text" placeholder={placeholder || '请输入依赖名称'} onChange={onChange} onKeyPress={inputHander} />
+        <input type="text" placeholder={placeholder || '请输入依赖名称'} onChange={onChange} />
       </div>
     </>
   )

@@ -13,7 +13,10 @@ const WebView = () => {
   // 搜索框输入的值
   const [searchValue, setSearchValue] = useState('')
   // 搜索结果 dep依赖名 version版本号 string | Array<string>
-  const [searchResult, setSearchResult] = useState({ dep: '', version: '' })
+  const [searchResult, setSearchResult] = useState<{ dep: string; version: string | Array<string> }>({
+    dep: '',
+    version: []
+  })
   // 是否为加载状态
   const [loading, setLoading] = useState(false)
   // package.json的内容
@@ -54,8 +57,10 @@ const WebView = () => {
         case MESSAGE.FINISH_SEARCH_PACKAGE_LATEST:
           setLoading(false)
           const { dep, version } = data.payload
-          console.log('webview 获取到的搜索结果', `${dep}-${version}`)
           setSearchResult({ dep, version })
+          return
+        case MESSAGE.FINISH_UPGRADE_PACKAGE:
+          setLoading(false)
           return
         default:
           return
@@ -79,42 +84,91 @@ const WebView = () => {
     vscode.postMessage({ command: MESSAGE.CHECK_PACKAGES_LATEST })
   }, [])
   // 搜索依赖
-  const onSearch = () => {
-    setLoading(true)
-    vscode.postMessage({ command: MESSAGE.SEARCH_PACKAGE_LATEST, payload: { dep: searchValue } })
+  const onSearch = (all: boolean = false) => {
+    if (searchValue.trim()) {
+      setLoading(true)
+      vscode.postMessage({ command: MESSAGE.SEARCH_PACKAGE_LATEST, payload: { dep: searchValue.trim(), all } })
+    }
   }
-  const onEnter = () => {
-    onSearch()
+  /**
+   * 删除依赖
+   * @param {string} packageName 依赖名称
+   * @param {string} version 要升级的版本
+   * @return {void}
+   */
+  const upgradePackage = (packageName: string, version: string): void => {
+    setLoading(true)
+    vscode.postMessage({ command: MESSAGE.UPGRAD_PACKAGE, payload: { dep: packageName, version } })
   }
   return (
     <div className="npm-manage">
       <Loading visible={loading} />
       <div className="header">
-        <Input onChange={onChangeSearchValue} onEnter={onEnter} />
+        <Input onChange={onChangeSearchValue} />
         <div className="filter">
-          <button className="filter-btn" onClick={onSearch}>
-            搜索
+          <button
+            className="filter-btn"
+            onClick={() => {
+              onSearch()
+            }}
+          >
+            搜索最新稳定版本
+          </button>
+          <button
+            className="filter-btn"
+            onClick={() => {
+              onSearch(true)
+            }}
+          >
+            搜索依赖的最新十个版本
           </button>
           <button className="filter-btn" onClick={onCheckUpdate}>
             检查依赖升级
-            <svg className="icon download-icon" aria-hidden="true">
-              <use xlinkHref="#icon-download"></use>
-            </svg>
+            <i className="iconfont icon-yunxiazai_o"></i>
           </button>
         </div>
       </div>
       {/* TODO 修改搜索结果的样式 */}
       {searchResult.dep && searchResult.version ? (
         <div className="search-result">
-          <div className="card">
+          <div className="card" style={{ width: 'calc(50% - 13px)' }}>
             <div className="title">
               <span>搜索结果</span>
             </div>
-            <div className="list">
-              <PackageList
-                data={{ [searchResult.dep]: '' }}
-                latestVersionData={{ [searchResult.dep]: searchResult.version }}
-              ></PackageList>
+            <div className="search-list">
+              <div className="package-name">{searchResult.dep}</div>
+              <div className="package-version">
+                {Array.isArray(searchResult.version) ? (
+                  searchResult.version.map((item: string) => {
+                    return (
+                      <div
+                        className="version"
+                        key={item}
+                        onClick={() => {
+                          upgradePackage(searchResult.dep, item)
+                        }}
+                      >
+                        <div className="name" title={item}>
+                          {item}
+                        </div>
+                        <div className="iconfont icon-yunxiazai_o" title="安装依赖"></div>
+                      </div>
+                    )
+                  })
+                ) : (
+                  <div
+                    className="version"
+                    onClick={() => {
+                      upgradePackage(searchResult.dep, searchResult.version as string)
+                    }}
+                  >
+                    <div className="name" title={searchResult.version}>
+                      {searchResult.version}
+                    </div>
+                    <div className="iconfont icon-yunxiazai_o" title="安装依赖"></div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

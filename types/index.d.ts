@@ -1,19 +1,19 @@
 declare module '*.less' {
-  const content: { [className: string]: string };
-  export default content;
+  const content: { [className: string]: string }
+  export default content
 }
 
 declare module '*.css' {
-  const content: { [className: string]: string };
-  export default content;
+  const content: { [className: string]: string }
+  export default content
 }
 
 declare interface StringObject {
-  [propName: string]: string;
+  [propName: string]: string
 }
 
 interface VsCode {
-  postMessage(message: any): void;
+  postMessage(message: any): void
 }
-declare const vscode: VsCode;
-declare function acquireVsCodeApi(): VsCode;
+declare const vscode: VsCode
+declare function acquireVsCodeApi(): VsCode

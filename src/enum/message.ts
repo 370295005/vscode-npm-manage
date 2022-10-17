@@ -28,5 +28,13 @@ export enum MESSAGE {
   /**
    * 升级依赖完成
    */
-  UPGRAD_PACKAGE_FINISH
+  FINISH_UPGRADE_PACKAGE,
+  /**
+   * 删除单个依赖
+   */
+  DELETE_PACKAGE,
+  /**
+   * 删除单个依赖完成
+   */
+  FINISH_DELETE_PACKAGE
 }

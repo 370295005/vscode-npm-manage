@@ -33,7 +33,10 @@
     "baseUrl": "./" /* Base directory to resolve non-absolute module names. */,
 
     /* Advanced Options */
-    "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
+    "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "exclude": ["node_modules", ".vscode-test"]
 }

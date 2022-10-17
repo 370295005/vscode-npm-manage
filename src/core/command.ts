@@ -58,7 +58,7 @@ export const upgradeDep = (dep: string, version: string): Promise<any> => {
       if (error || stderr) {
         reject(error || stderr)
       } else {
-        resolve(stdout || 'success')
+        resolve(stdout || `${dep}安装成功`)
       }
     })
   })
@@ -79,7 +79,11 @@ export const getDepLatestVersion = (dep: string, all: boolean = false): Promise<
       if (error || stderr) {
         reject(error || stderr || '获取版本失败')
       } else {
-        resolve(stdout)
+        // 查询全部版本返回一个字符串格式化为数组，并且截取后\最新十个版本
+        const res = all
+          ? stdout.replace(/\[|]/g, '').replace(/(\s*)/g, '').replace(/'/g, '').split(',').slice(-10).reverse()
+          : stdout.replace('\n', '')
+        resolve(res)
       }
     })
   })

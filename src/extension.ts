@@ -7,7 +7,7 @@ import { NodeDependenciesProvider } from './core/com'
 
 type MessageType = {
   command: MESSAGE
-  payload: { version: string; dep: string }
+  payload: { version: string; dep: string; all: boolean }
 }
 /**
  * 插件触发时执行
@@ -58,10 +58,9 @@ export function activate(context: vscode.ExtensionContext) {
         // 搜索依赖
         case MESSAGE.SEARCH_PACKAGE_LATEST:
           try {
-            console.log('搜索')
-            const { dep } = message.payload
+            const { dep, all } = message.payload
             if (dep) {
-              const result = await getDepLatestVersion(dep)
+              const result = await getDepLatestVersion(dep, all)
               panel.webview.postMessage({
                 message: MESSAGE.FINISH_SEARCH_PACKAGE_LATEST,
                 payload: { dep, version: result }
@@ -69,7 +68,7 @@ export function activate(context: vscode.ExtensionContext) {
             }
           } catch (error) {
             vscode.window.showErrorMessage(JSON.stringify(error))
-            panel.webview.postMessage({ message: MESSAGE.SEARCH_PACKAGE_LATEST, payload: null })
+            panel.webview.postMessage({ message: MESSAGE.FINISH_SEARCH_PACKAGE_LATEST, payload: null })
           }
           return
         // 升级单个依赖
@@ -78,6 +77,7 @@ export function activate(context: vscode.ExtensionContext) {
             const { dep, version } = message.payload
             const result = await upgradeDep(dep, version)
             console.log(result)
+            panel.webview.postMessage({ message: MESSAGE.FINISH_UPGRADE_PACKAGE })
           } catch (error) {
             vscode.window.showErrorMessage(JSON.stringify(error))
           }
@@ -91,10 +91,13 @@ export function activate(context: vscode.ExtensionContext) {
   })
 
   vscode.commands.registerCommand('vscode-npm-manage.npmUpdateLatest', () => {
-    vscode.window.showInformationMessage('更新最新的2npm')
+    vscode.window.showInformationMessage('更新最新的依赖')
   })
   vscode.commands.registerCommand('vscode-npm-manage.deleteEntry', () => {
     vscode.window.showInformationMessage('删除')
+  })
+  vscode.commands.registerCommand('vscode-npm-manage.addEntry', () => {
+    vscode.window.showInformationMessage('添加依赖')
   })
 
   context.subscriptions.push(disposable)
