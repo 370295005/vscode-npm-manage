@@ -89,17 +89,6 @@ export function activate(context: vscode.ExtensionContext) {
 
     panel.onDidDispose(() => {}, undefined, context.subscriptions)
   })
-
-  vscode.commands.registerCommand('vscode-npm-manage.npmUpdateLatest', () => {
-    vscode.window.showInformationMessage('更新最新的依赖')
-  })
-  vscode.commands.registerCommand('vscode-npm-manage.deleteEntry', () => {
-    vscode.window.showInformationMessage('删除')
-  })
-  vscode.commands.registerCommand('vscode-npm-manage.addEntry', () => {
-    vscode.window.showInformationMessage('添加依赖')
-  })
-
   context.subscriptions.push(disposable)
 }
 

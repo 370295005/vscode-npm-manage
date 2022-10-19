@@ -18,7 +18,6 @@
   "activationEvents": [
     "onView:npmManageDependencies",
     "onView:npmManageDevDependencies",
-    "onCommand:vscode-npm-manage.npmUpdateLatest",
     "onCommand:vscode-npm-manage.openNpmManageView"
   ],
   "main": "./dist/extension.js",
@@ -40,18 +39,6 @@
       }
     },
     "menus": {
-      "view/title": [
-        {
-          "command": "vscode-npm-manage.addEntry",
-          "when": "view == npmManageDependencies || view == npmManageDevDependencies"
-        }
-      ],
-      "view/item/context": [
-        {
-          "command": "vscode-npm-manage.deleteEntry",
-          "when": "view == npmManageDependencies || view == npmManageDevDependencies"
-        }
-      ],
       "editor/title": [
         {
           "when": "resourceFilename == package.json",
@@ -90,22 +77,6 @@
     },
     "commands": [
       {
-        "command": "vscode-npm-manage.refreshEntry",
-        "title": "Refresh",
-        "icon": {
-          "light": "/src/images/check-light.svg",
-          "dark": "/src/images/check-dark.svg"
-        }
-      },
-      {
-        "command": "vscode-npm-manage.deleteEntry",
-        "title": "删除"
-      },
-      {
-        "command": "vscode-npm-manage.addEntry",
-        "title": "添加"
-      },
-      {
         "command": "vscode-npm-manage.openNpmManageView",
         "title": "Open Npm Manage View",
         "category": "Npm Manage",
@@ -113,11 +84,6 @@
           "light": "/src/images/check-light.svg",
           "dark": "/src/images/check-dark.svg"
         }
-      },
-      {
-        "command": "vscode-npm-manage.npmUpdateLatest",
-        "title": "npm update latest",
-        "category": "Npm Manage"
       }
     ]
   },
@@ -177,9 +143,9 @@
     "postcss-preset-env": "^6.7.0",
     "prettier": "^2.0.5",
     "style-loader": "^1.2.1",
-    "ts-loader": "^7.0.1",
+    "ts-loader": "^8.4.0",
     "tslib": "^1.11.1",
-    "typescript": "^3.8.3",
+    "typescript": "^4.8.4",
     "url-loader": "^4.1.0",
     "vscode-test": "^1.3.0",
     "webpack": "^4.42.0",
@@ -193,6 +159,7 @@
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.7",
     "@types/webpack-env": "^1.15.1",
+    "antd": "^4.23.6",
     "axios": "^0.19.2",
     "cosmiconfig": "^6.0.0",
     "latest-version": "^5.1.0",

@@ -17,6 +17,8 @@ const WebView = () => {
     dep: '',
     version: []
   })
+  // 在线平台组依赖
+  // const [csdcList, setCsdcList] = useState([])
   // 是否为加载状态
   const [loading, setLoading] = useState(false)
   // package.json的内容
@@ -55,9 +57,11 @@ const WebView = () => {
           })
           return
         case MESSAGE.FINISH_SEARCH_PACKAGE_LATEST:
-          setLoading(false)
-          const { dep, version } = data.payload
-          setSearchResult({ dep, version })
+          batch(() => {
+            setLoading(false)
+            const { dep, version } = data.payload
+            setSearchResult({ dep, version })
+          })
           return
         case MESSAGE.FINISH_UPGRADE_PACKAGE:
           setLoading(false)
@@ -102,7 +106,7 @@ const WebView = () => {
   }
   return (
     <div className="npm-manage">
-      <Loading visible={loading} />
+      <Loading isLoading={loading} />
       <div className="header">
         <Input onChange={onChangeSearchValue} />
         <div className="filter">
@@ -136,7 +140,9 @@ const WebView = () => {
               <span>搜索结果</span>
             </div>
             <div className="search-list">
-              <div className="package-name">{searchResult.dep}</div>
+              <div className="package-name" title={searchResult.dep}>
+                {searchResult.dep}
+              </div>
               <div className="package-version">
                 {Array.isArray(searchResult.version) ? (
                   searchResult.version.map((item: string) => {
@@ -151,7 +157,7 @@ const WebView = () => {
                         <div className="name" title={item}>
                           {item}
                         </div>
-                        <div className="iconfont icon-yunxiazai_o" title="安装依赖"></div>
+                        <div className="iconfont icon-yunxiazai_o" title={`安装${searchResult.dep}@${item}`}></div>
                       </div>
                     )
                   })
@@ -165,7 +171,10 @@ const WebView = () => {
                     <div className="name" title={searchResult.version}>
                       {searchResult.version}
                     </div>
-                    <div className="iconfont icon-yunxiazai_o" title="安装依赖"></div>
+                    <div
+                      className="iconfont icon-yunxiazai_o"
+                      title={`安装${searchResult.dep}@${searchResult.version}}`}
+                    ></div>
                   </div>
                 )}
               </div>
@@ -175,17 +184,19 @@ const WebView = () => {
       ) : null}
       <div className="content">
         <div className="card">
-          <div className="title">
-            <span>生产依赖</span>
-          </div>
+          <div className="title">在线平台组依赖</div>
+        </div>
+        <div className="list">{/* <PackageList data={csdcList} latestVersionData={[]}></PackageList> */}</div>
+      </div>
+      <div className="content">
+        <div className="card">
+          <div className="title">生产依赖</div>
           <div className="list">
             <PackageList data={packageData.dependencies} latestVersionData={latestVersionData} />
           </div>
         </div>
         <div className="card">
-          <div className="title">
-            <span>开发依赖</span>
-          </div>
+          <div className="title">开发依赖</div>
           <div className="list">
             <PackageList data={packageData.devDependencies} latestVersionData={latestVersionData} />
           </div>
@@ -201,7 +212,3 @@ ReactDom.render(
   </div>,
   document.getElementById('vscode-npm-manage')
 )
-
-if (module.hot) {
-  module.hot.accept()
-}

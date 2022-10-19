@@ -1,22 +1,16 @@
-import React, { FC } from 'react'
+import React, { FC, memo } from 'react'
+import { Spin } from 'antd'
 import './index.less'
-
+import 'antd/lib/spin/style/index.css'
 export interface LoadingProps {
-  visible: boolean
+  isLoading: boolean
 }
-const Loading: FC<LoadingProps> = ({ visible }) => {
-  if (!visible) {
-    return null
-  }
+const Loading: FC<LoadingProps> = ({ isLoading }) => {
   return (
-    <div className="vscode-npm-manage-loader-box">
-      <div className="vscode-npm-manage-loader">
-        <div className="outer"></div>
-        <div className="inner"></div>
-      </div>
-      <div className="vscode-npm-manage-loader-text">Loading...</div>
+    <div className="loading" style={{ display: isLoading ? 'flex' : 'none' }}>
+      <Spin size="large" />
     </div>
   )
 }
 
-export default React.memo(Loading)
+export default memo(Loading)

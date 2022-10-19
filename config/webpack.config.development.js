@@ -48,7 +48,8 @@ const extensionConfig = {
       {
         enforce: 'pre',
         test: /\.(js|jsx|ts|tsx)$/,
-        use: 'eslint-loader'
+        use: 'eslint-loader',
+        exclude: /antd/
       },
       {
         test: /\.ts$/,
@@ -61,7 +62,8 @@ const extensionConfig = {
               }
             }
           }
-        ]
+        ],
+        exclude: /node_modules/
       }
     ]
   },
@@ -78,6 +80,7 @@ const webViewConfig = {
     filename: '[name].js',
     chunkFilename: '[name].chunk.js'
   },
+  stats: 'errors-only',
   plugins: [
     new FriendlyErrorsPlugin(),
     new CopyWebpackPlugin([
@@ -96,11 +99,13 @@ const webViewConfig = {
       {
         enforce: 'pre',
         test: /\.(js|jsx|ts|tsx)$/,
-        use: 'eslint-loader'
+        use: 'eslint-loader',
+        exclude: /node_modules/
       },
       {
         test: /\.(js|jsx)$/,
-        use: 'babel-loader'
+        use: 'babel-loader',
+        exclude: /node_modules/
       },
       {
         test: /\.(ts|tsx)$/,
@@ -118,7 +123,8 @@ const webViewConfig = {
               }
             }
           }
-        ]
+        ],
+        exclude: /node_modules/
       },
       ...styleLoaders
     ]

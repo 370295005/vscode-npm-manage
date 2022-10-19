@@ -27,7 +27,7 @@ const getWebViewContent = (context: vscode.ExtensionContext, templatePath: strin
   const dirPath = path.dirname(resourcePath)
   let html = fs.readFileSync(resourcePath, 'utf-8')
   // vscode不支持直接加载本地资源，需要替换成其专有路径格式，这里只是简单的将样式和JS的路径替换
-  html = html.replace(/(<link.+?href="|<script.+?src="|<img.+?src=")(.+?)"/g, (_m, $1, $2) => {
+  html = html.replace(/(<link.+?href="|<script.+?src="|<img.+?src=")(.+?)"/g, (_m, $1: string, $2: string) => {
     return $1 + vscode.Uri.file(path.resolve(dirPath, $2)).with({ scheme: 'vscode-resource' }).toString() + '"'
   })
   return html
