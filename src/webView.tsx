@@ -4,7 +4,9 @@ import ReactDom, { unstable_batchedUpdates as batch } from 'react-dom'
 import Input from './components/input/index'
 import PackageList from './components/package-list'
 import Loading from './components/loading'
+import AlertComponent from './components/alert'
 import { MESSAGE } from './enum/message'
+import { AlertProps } from 'antd/lib/alert'
 import './styles/reset.less'
 import './styles/webview.less'
 
@@ -21,6 +23,12 @@ const WebView = () => {
   // const [csdcList, setCsdcList] = useState([])
   // 是否为加载状态
   const [loading, setLoading] = useState(false)
+  // 是否显示提示框
+  const [showAlert, setShowAlert] = useState(false)
+  // 提示框内容
+  const [alertMessage, setAlertMessage] = useState('')
+  // 提示框类型
+  const [alertType, setAlertType] = useState<AlertProps['type']>('warning')
   // package.json的内容
   const [packageData, setPackageData] = useState<PackageType>({
     name: '',
@@ -43,9 +51,11 @@ const WebView = () => {
     const listen = (event: any) => {
       const data = event.data
       switch (data.message) {
+        // 查询依赖版本完成
         case MESSAGE.FINISH_QUERY_PACKAGE:
           setPackageData(data.payload)
           return
+        // 查询依赖版本更新完成
         case MESSAGE.FINISH_CHECK_PACKAGES_LATEST:
           if (!data.payload) {
             setLoading(false)
@@ -56,14 +66,20 @@ const WebView = () => {
             setLoading(false)
           })
           return
+        // 查询单个依赖最新版本完成
         case MESSAGE.FINISH_SEARCH_PACKAGE_LATEST:
+          const { dep, version } = data.payload
           batch(() => {
             setLoading(false)
-            const { dep, version } = data.payload
             setSearchResult({ dep, version })
           })
           return
+        // 升级依赖完成
         case MESSAGE.FINISH_UPGRADE_PACKAGE:
+          setLoading(false)
+          return
+        // 删除依赖完成
+        case MESSAGE.FINISH_DELETE_PACKAGE:
           setLoading(false)
           return
         default:
@@ -87,8 +103,12 @@ const WebView = () => {
     setLoading(true)
     vscode.postMessage({ command: MESSAGE.CHECK_PACKAGES_LATEST })
   }, [])
-  // 搜索依赖
-  const onSearch = (all: boolean = false) => {
+  /**
+   *
+   * @param {boolean} all 是否搜索全部版本
+   * @return {void}
+   */
+  const onSearch = (all: boolean = false): void => {
     if (searchValue.trim()) {
       setLoading(true)
       vscode.postMessage({ command: MESSAGE.SEARCH_PACKAGE_LATEST, payload: { dep: searchValue.trim(), all } })
@@ -104,9 +124,19 @@ const WebView = () => {
     setLoading(true)
     vscode.postMessage({ command: MESSAGE.UPGRAD_PACKAGE, payload: { dep: packageName, version } })
   }
+  /**
+   * 删除依赖
+   * @param {string} packageName 依赖名称
+   * @return {void}
+   */
+  const deletePackage = (packageName: string): void => {
+    setLoading(true)
+    vscode.postMessage({ command: MESSAGE.DELETE_PACKAGE, payload: { dep: packageName } })
+  }
   return (
     <div className="npm-manage">
       <Loading isLoading={loading} />
+      {showAlert ? <AlertComponent message={alertMessage} type={alertType} /> : null}
       <div className="header">
         <Input onChange={onChangeSearchValue} />
         <div className="filter">
@@ -173,7 +203,7 @@ const WebView = () => {
                     </div>
                     <div
                       className="iconfont icon-yunxiazai_o"
-                      title={`安装${searchResult.dep}@${searchResult.version}}`}
+                      title={`安装${searchResult.dep}@${searchResult.version}`}
                     ></div>
                   </div>
                 )}
@@ -192,13 +222,23 @@ const WebView = () => {
         <div className="card">
           <div className="title">生产依赖</div>
           <div className="list">
-            <PackageList data={packageData.dependencies} latestVersionData={latestVersionData} />
+            <PackageList
+              data={packageData.dependencies}
+              latestVersionData={latestVersionData}
+              upgradePackage={upgradePackage}
+              deletePackage={deletePackage}
+            />
           </div>
         </div>
         <div className="card">
           <div className="title">开发依赖</div>
           <div className="list">
-            <PackageList data={packageData.devDependencies} latestVersionData={latestVersionData} />
+            <PackageList
+              data={packageData.devDependencies}
+              latestVersionData={latestVersionData}
+              upgradePackage={upgradePackage}
+              deletePackage={deletePackage}
+            />
           </div>
         </div>
       </div>

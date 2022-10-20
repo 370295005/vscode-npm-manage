@@ -3,7 +3,6 @@ import { exec } from 'child_process'
 import * as vscode from 'vscode'
 import { readFilePromise } from '../utils/file'
 import ncu from 'npm-check-updates'
-// import axios from 'axios';
 
 // 获取当前依赖的版本
 export const getPackageVersion = (_context: vscode.ExtensionContext, url: any): Object => {
@@ -49,11 +48,13 @@ export const getPackageLastVersion = (packageUrl: string): Promise<StringObject>
  * 升级某个依赖
  * @param {string} dep 依赖的名字
  * @param {string} version
+ * @param {string} currentPath 当前工作区的路径
  */
 
-export const upgradeDep = (dep: string, version: string): Promise<any> => {
+export const upgradeDep = (dep: string, version: string, currentPath: string): Promise<any> => {
   return new Promise((resolve, reject) => {
-    const cmd = `npm install ${dep}@${version}`
+    console.log(currentPath)
+    const cmd = `npm install ${dep}@${version} -S --prefix ${currentPath}`
     exec(cmd, (error, stdout, stderr) => {
       if (error || stderr) {
         reject(error || stderr)
@@ -84,6 +85,25 @@ export const getDepLatestVersion = (dep: string, all: boolean = false): Promise<
           ? stdout.replace(/\[|]/g, '').replace(/(\s*)/g, '').replace(/'/g, '').split(',').slice(-10).reverse()
           : stdout.replace('\n', '')
         resolve(res)
+      }
+    })
+  })
+}
+
+/**
+ * 删除某个依赖
+ * @param {string} dep 依赖名称
+ * @param {string} currentPath 工作区路径
+ * @return {Promise<any}
+ * */
+export const deletePackage = (dep: string, currentPath: string): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    const cmd = `npm uninstall ${dep} --prefix ${currentPath}`
+    exec(cmd, (error, stdout, stderr) => {
+      if (error || stderr) {
+        reject(error || stderr)
+      } else {
+        resolve(stdout || `${dep}删除成功`)
       }
     })
   })

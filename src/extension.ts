@@ -2,12 +2,18 @@ import * as vscode from 'vscode'
 import path from 'path'
 import { getWebViewContent, getExtensionFileVscodeResource } from './utils/index'
 import { MESSAGE } from './enum/message'
-import { getPackageVersion, getPackageLastVersion, upgradeDep, getDepLatestVersion } from './core/command'
+import {
+  getPackageVersion,
+  getPackageLastVersion,
+  upgradeDep,
+  getDepLatestVersion,
+  deletePackage
+} from './core/command'
 import { NodeDependenciesProvider } from './core/com'
 
 type MessageType = {
   command: MESSAGE
-  payload: { version: string; dep: string; all: boolean }
+  payload: { version: string; dep: string; all: boolean; error: string; result: string }
 }
 /**
  * 插件触发时执行
@@ -39,9 +45,11 @@ export function activate(context: vscode.ExtensionContext) {
       switch (message.command) {
         // 初始化查询所有依赖的版本
         case MESSAGE.INIT_NPM:
-          const data = await getPackageVersion(context, url)
-          if (data) {
-            panel.webview.postMessage({ message: MESSAGE.FINISH_QUERY_PACKAGE, payload: data })
+          try {
+            const result = await getPackageVersion(context, url)
+            panel.webview.postMessage({ message: MESSAGE.FINISH_QUERY_PACKAGE, payload: result })
+          } catch (error) {
+            panel.webview.postMessage({ message: MESSAGE.FINISH_QUERY_PACKAGE, payload: error })
           }
           return
         // 获取所有依赖的最新版本
@@ -50,9 +58,7 @@ export function activate(context: vscode.ExtensionContext) {
             const result = await getPackageLastVersion(url)
             panel.webview.postMessage({ message: MESSAGE.FINISH_CHECK_PACKAGES_LATEST, payload: result })
           } catch (error) {
-            vscode.window.showErrorMessage(JSON.stringify(error))
-            // vscode.window.showErrorMessage('error')
-            panel.webview.postMessage({ message: MESSAGE.FINISH_CHECK_PACKAGES_LATEST, payload: null })
+            panel.webview.postMessage({ message: MESSAGE.FINISH_CHECK_PACKAGES_LATEST, payload: error })
           }
           return
         // 搜索依赖
@@ -67,19 +73,28 @@ export function activate(context: vscode.ExtensionContext) {
               })
             }
           } catch (error) {
-            vscode.window.showErrorMessage(JSON.stringify(error))
-            panel.webview.postMessage({ message: MESSAGE.FINISH_SEARCH_PACKAGE_LATEST, payload: null })
+            panel.webview.postMessage({ message: MESSAGE.FINISH_SEARCH_PACKAGE_LATEST, payload: error })
           }
           return
         // 升级单个依赖
         case MESSAGE.UPGRAD_PACKAGE:
           try {
             const { dep, version } = message.payload
-            const result = await upgradeDep(dep, version)
-            console.log(result)
-            panel.webview.postMessage({ message: MESSAGE.FINISH_UPGRADE_PACKAGE })
+            const result = await upgradeDep(dep, version, vscode.workspace.rootPath as string)
+            panel.webview.postMessage({ message: MESSAGE.FINISH_UPGRADE_PACKAGE, payload: { result } })
           } catch (error) {
-            vscode.window.showErrorMessage(JSON.stringify(error))
+            panel.webview.postMessage({ message: MESSAGE.FINISH_UPGRADE_PACKAGE, payload: { error } })
+          }
+          return
+        // 删除单个依赖
+        case MESSAGE.DELETE_PACKAGE:
+          try {
+            const { dep } = message.payload
+            const result = await deletePackage(dep, vscode.workspace.rootPath as string)
+            console.log(result)
+            panel.webview.postMessage({ message: MESSAGE.FINISH_DELETE_PACKAGE })
+          } catch (error) {
+            panel.webview.postMessage({ message: MESSAGE.FINISH_DELETE_PACKAGE })
           }
           return
         default:

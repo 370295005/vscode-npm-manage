@@ -2,6 +2,7 @@
   "name": "vscode-npm-manage",
   "displayName": "Npm Manage",
   "description": "VSCode Npm管理插件",
+  "publisher": "370295005@qq.com",
   "keywords": [
     "npm",
     "npm manage",
@@ -90,11 +91,9 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack --watch",
     "build": "cross-env NODE_ENV=production webpack --progress",
-    "vscode:prepublish": "yarn run compile",
     "compile": "tsc -p ./",
     "lint": "eslint src --ext ts",
     "watch": "tsc -watch -p ./",
-    "pretest": "yarn run compile && yarn run lint",
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {

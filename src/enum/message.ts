@@ -20,6 +20,9 @@ export enum MESSAGE {
    * 搜索检测依赖更新
    */
   SEARCH_PACKAGE_LATEST,
+  /**
+   * 搜索最新版本依赖完成
+   */
   FINISH_SEARCH_PACKAGE_LATEST,
   /**
    * 升级单个依赖

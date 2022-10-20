@@ -1,28 +1,12 @@
 import React, { FC } from 'react'
 import './index.less'
-import { MESSAGE } from '@/enum/message'
-/**
- * 删除依赖
- * @param {string} packageName 依赖名称
- * @return {void}
- */
-const deletePackage = (packageName: string): void => {
-  vscode.postMessage({ command: MESSAGE.DELETE_PACKAGE, payload: { dep: packageName } })
-}
-/**
- * 删除依赖
- * @param {string} packageName 依赖名称
- * @param {string} version 要升级的版本
- * @return {void}
- */
-const upgradePackage = (packageName: string, version: string): void => {
-  vscode.postMessage({ command: MESSAGE.UPGRAD_PACKAGE, payload: { dep: packageName, version } })
-}
 export interface PackageListType {
   data: StringObject
   latestVersionData: StringObject
+  deletePackage: (packageName: string) => void
+  upgradePackage: (packageName: string, version: string) => void
 }
-const PackageList: FC<PackageListType> = ({ data, latestVersionData }) => {
+const PackageList: FC<PackageListType> = ({ data, latestVersionData, deletePackage, upgradePackage }) => {
   return (
     <div className="package-list">
       {Object.keys(data).map((packageName, index) => {
