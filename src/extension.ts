@@ -36,7 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
       retainContextWhenHidden: true // webview被隐藏时保持状态,避免被重置.
     })
     panel.webview.html = html
-    panel.iconPath = getExtensionFileVscodeResource(context, 'dist/images/npm-outline.svg')
+    panel.iconPath = getExtensionFileVscodeResource(context, 'dist/images/extension.png')
 
     /**
      * 接收并处理webview传递的信息

@@ -60,7 +60,7 @@
         {
           "id": "npmManageSidebar",
           "title": "Npm Package",
-          "icon": "/src/images/npm-outline.svg"
+          "icon": "/src/images/extension.png"
         }
       ]
     },
@@ -82,8 +82,8 @@
         "title": "Open Npm Manage View",
         "category": "Npm Manage",
         "icon": {
-          "light": "/src/images/check-light.svg",
-          "dark": "/src/images/check-dark.svg"
+          "light": "/src/images/command-light.png",
+          "dark": "/src/images/command-dark.png"
         }
       }
     ]

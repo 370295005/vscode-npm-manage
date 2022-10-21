@@ -65,9 +65,9 @@ export class NodeDependenciesProvider implements vscode.TreeDataProvider<Depende
     }
   }
 
-  private pathExists(p: string): boolean {
+  private pathExists(path: string): boolean {
     try {
-      fs.accessSync(p)
+      fs.accessSync(path)
     } catch (err) {
       return false
     }
@@ -89,7 +89,7 @@ class Dependency extends vscode.TreeItem {
   }
 
   iconPath = {
-    light: path.join(__filename, '..', '..', 'images', 'check-dark.svg'),
-    dark: path.join(__filename, '..', '..', 'images', 'check-dark.svg')
+    light: path.join(__filename, '..', '..', 'images', 'command-light.png'),
+    dark: path.join(__filename, '..', '..', 'images', 'command-dark.png')
   }
 }
