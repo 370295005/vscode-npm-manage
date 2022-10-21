@@ -4,9 +4,7 @@ import ReactDom, { unstable_batchedUpdates as batch } from 'react-dom'
 import Input from './components/input/index'
 import PackageList from './components/package-list'
 import Loading from './components/loading'
-import AlertComponent from './components/alert'
 import { MESSAGE } from './enum/message'
-import { AlertProps } from 'antd/lib/alert'
 import './styles/reset.less'
 import './styles/webview.less'
 
@@ -23,12 +21,6 @@ const WebView = () => {
   // const [csdcList, setCsdcList] = useState([])
   // 是否为加载状态
   const [loading, setLoading] = useState(false)
-  // 是否显示提示框
-  const [showAlert, setShowAlert] = useState(false)
-  // 提示框内容
-  const [alertMessage, setAlertMessage] = useState('')
-  // 提示框类型
-  const [alertType, setAlertType] = useState<AlertProps['type']>('warning')
   // package.json的内容
   const [packageData, setPackageData] = useState<PackageType>({
     name: '',
@@ -43,6 +35,7 @@ const WebView = () => {
   const [latestVersionData, setLatestVersion] = useState<{ [key: string]: string }>({})
   // 初始化
   useEffect(() => {
+    setLoading(true)
     vscode.postMessage({ command: MESSAGE.INIT_NPM })
   }, [])
 
@@ -53,7 +46,10 @@ const WebView = () => {
       switch (data.message) {
         // 查询依赖版本完成
         case MESSAGE.FINISH_QUERY_PACKAGE:
-          setPackageData(data.payload)
+          batch(() => {
+            setLoading(false)
+            setPackageData(data.payload)
+          })
           return
         // 查询依赖版本更新完成
         case MESSAGE.FINISH_CHECK_PACKAGES_LATEST:
@@ -136,7 +132,6 @@ const WebView = () => {
   return (
     <div className="npm-manage">
       <Loading isLoading={loading} />
-      {showAlert ? <AlertComponent message={alertMessage} type={alertType} /> : null}
       <div className="header">
         <Input onChange={onChangeSearchValue} />
         <div className="filter">

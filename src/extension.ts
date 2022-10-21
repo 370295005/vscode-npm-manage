@@ -81,9 +81,9 @@ export function activate(context: vscode.ExtensionContext) {
           try {
             const { dep, version } = message.payload
             const result = await upgradeDep(dep, version, vscode.workspace.rootPath as string)
-            panel.webview.postMessage({ message: MESSAGE.FINISH_UPGRADE_PACKAGE, payload: { result } })
+            panel.webview.postMessage({ message: MESSAGE.FINISH_UPGRADE_PACKAGE, payload: result })
           } catch (error) {
-            panel.webview.postMessage({ message: MESSAGE.FINISH_UPGRADE_PACKAGE, payload: { error } })
+            panel.webview.postMessage({ message: MESSAGE.FINISH_UPGRADE_PACKAGE, payload: error })
           }
           return
         // 删除单个依赖

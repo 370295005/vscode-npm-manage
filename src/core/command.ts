@@ -55,11 +55,11 @@ export const upgradeDep = (dep: string, version: string, currentPath: string): P
   return new Promise((resolve, reject) => {
     console.log(currentPath)
     const cmd = `npm install ${dep}@${version} -S --prefix ${currentPath}`
-    exec(cmd, (error, stdout, stderr) => {
+    exec(cmd, (error, _, stderr) => {
       if (error || stderr) {
         reject(error || stderr)
       } else {
-        resolve(stdout || `${dep}安装成功`)
+        resolve(`${dep}安装成功`)
       }
     })
   })
@@ -78,7 +78,7 @@ export const getDepLatestVersion = (dep: string, all: boolean = false): Promise<
     const cmd = `npm view ${dep} version${all ? 's' : ''}`
     exec(cmd, (error, stdout, stderr) => {
       if (error || stderr) {
-        reject(error || stderr || '获取版本失败')
+        reject('获取版本失败')
       } else {
         // 查询全部版本返回一个字符串格式化为数组，并且截取后\最新十个版本
         const res = all
@@ -99,11 +99,11 @@ export const getDepLatestVersion = (dep: string, all: boolean = false): Promise<
 export const deletePackage = (dep: string, currentPath: string): Promise<any> => {
   return new Promise((resolve, reject) => {
     const cmd = `npm uninstall ${dep} --prefix ${currentPath}`
-    exec(cmd, (error, stdout, stderr) => {
+    exec(cmd, (error, _, stderr) => {
       if (error || stderr) {
         reject(error || stderr)
       } else {
-        resolve(stdout || `${dep}删除成功`)
+        resolve(`${dep}删除成功`)
       }
     })
   })

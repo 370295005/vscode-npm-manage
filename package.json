@@ -1,6 +1,6 @@
 {
   "name": "vscode-npm-manage",
-  "displayName": "Npm Manage",
+  "displayName": "NPM MANAGE",
   "description": "VSCode Npm管理插件",
   "publisher": "370295005@qq.com",
   "keywords": [
@@ -8,7 +8,7 @@
     "npm manage",
     "manage"
   ],
-  "version": "0.0.1",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.46.0"
   },
@@ -25,19 +25,7 @@
   "contributes": {
     "configuration": {
       "type": "object",
-      "title": "vscode-npm-manage",
-      "properties": {
-        "vscodeNpmManage.yourName": {
-          "type": "string",
-          "default": "guest",
-          "description": "你的名字"
-        },
-        "vscodeNpmManage.showTip": {
-          "type": "boolean",
-          "default": true,
-          "description": "是否在每次启动时显示欢迎提示！"
-        }
-      }
+      "title": "vscode-npm-manage"
     },
     "menus": {
       "editor/title": [
@@ -89,12 +77,13 @@
     ]
   },
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack --watch",
-    "build": "cross-env NODE_ENV=production webpack --progress",
+    "dev": "rimraf dist cross-env NODE_ENV=development webpack --watch --config config/webpack.config.development.js",
+    "build": "rimraf dist && cross-env NODE_ENV=production webpack --progress --config config/webpack.config.production.js",
+    "build:dev": "rimraf dist cross-env NODE_ENV=development webpack --progress --config config/webpack.config.development.js",
+    "package": "vsce package",
     "compile": "tsc -p ./",
-    "lint": "eslint src --ext ts",
-    "watch": "tsc -watch -p ./",
-    "test": "node ./out/test/runTest.js"
+    "lint": "eslint src --ext .ts,.tsx,.js,jsx --fix",
+    "watch": "tsc -watch -p ./"
   },
   "devDependencies": {
     "@babel/core": "^7.8.7",
@@ -159,13 +148,7 @@
     "@types/react-dom": "^16.9.7",
     "@types/webpack-env": "^1.15.1",
     "antd": "^4.23.6",
-    "axios": "^0.19.2",
-    "cosmiconfig": "^6.0.0",
-    "latest-version": "^5.1.0",
-    "libnpmconfig": "^1.2.1",
     "npm-check-updates": "^7.0.1",
-    "npm-package-arg": "^8.0.1",
-    "package-json": "^6.5.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "read-package-json": "^2.1.1"

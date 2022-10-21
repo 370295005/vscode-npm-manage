@@ -3,11 +3,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const createStyleLoaders = require('./webpack.less')
-const webpack = require('webpack')
 const styleLoaders = createStyleLoaders({ isDev: true })
 
 const developmentBaseConfig = {
   mode: 'development',
+  stats: 'errors-only',
+  devtool: 'cheap-eval-source-map',
   resolve: {
     symlinks: false,
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
@@ -22,8 +23,6 @@ const developmentBaseConfig = {
 
 const extensionConfig = {
   target: 'node', // 打包对象设置为node,不再打包原生模块,例如 fs/path  TODO: webview是否单独设置为web?
-  devtool: 'cheap-eval-source-map',
-  stats: 'errors-only',
   entry: {
     extension: path.resolve('src', 'extension.ts')
   },
@@ -32,13 +31,7 @@ const extensionConfig = {
     filename: '[name].js',
     libraryTarget: 'commonjs2' // 设置打包内容已module.exports方式导出
   },
-  plugins: [
-    new FriendlyErrorsPlugin(),
-    // new webpack.BannerPlugin({ banner: '#!/usr/bin/env node', raw: true }),
-    new webpack.DefinePlugin({
-      '#! /usr/bin/env node': ''
-    })
-  ],
+  plugins: [new FriendlyErrorsPlugin()],
   node: {
     __filename: true,
     __dirname: true
@@ -71,7 +64,6 @@ const extensionConfig = {
 }
 
 const webViewConfig = {
-  devtool: 'cheap-eval-source-map', // inline-source-map
   entry: {
     webview: path.resolve('src', 'webView.tsx')
   },
@@ -80,7 +72,6 @@ const webViewConfig = {
     filename: '[name].js',
     chunkFilename: '[name].chunk.js'
   },
-  stats: 'errors-only',
   plugins: [
     new FriendlyErrorsPlugin(),
     new CopyWebpackPlugin([
@@ -142,16 +133,6 @@ const webViewConfig = {
         }
       }
     }
-  },
-  devServer: {
-    port: 8099,
-    hot: true,
-    open: true,
-    disableHostCheck: true, // 不再检测头
-    historyApiFallback: true,
-    inline: true, // appear in the browser console
-    progress: false, // 是否显示加载进度
-    overlay: true
   },
   ...developmentBaseConfig
 }
